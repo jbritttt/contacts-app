@@ -5,10 +5,10 @@ Getting Started
 
 To get started with the app, first make sure you have installed the following dependencies:
 
-# PHP 7.3.0 or higher
-# Laravel 7.0 or higher
-# Xammp
-# Composer
+PHP 7.3.0 or higher
+Laravel 7.0 or higher
+Xammp
+Composer
 
 Once you have these tools installed, you can clone the repository and install the dependencies using the following commands:
 
