@@ -1,20 +1,35 @@
+const noContactsMessage = `<p class="create-first-contact-message">You currently dont have any contacts.<br/>Create your first contact!
+</p>`
+
+
 const content = document.getElementById("content");
 
+let pageNumber = 1;
+
+let totalPages;
 
 
-//*************************get data***************************** */
+
+//*********************************** get data ***************************************** */
 
 async function employees() {
     try {
-        const response = await fetch("http://127.0.0.1:8000/api/employee");
+        const response = await fetch(
+            `http://127.0.0.1:8000/api/employee?page=${pageNumber}`
+        );
 
         const data = await response.json();
-        console.log(data.status);
+        
         if (data.status == 200) {
+           totalPages = data.employee.last_page;
+            pageNumber = data.employee.current_page;
             displayData(data);
+            addPagination(true);
+            displayPageCount()
+            
         } else {
-            content.innerHTML = `<p class="create-first-contact-message">You currently dont have any contacts.<br/>Create your first contact!
-</p>`;
+            content.innerHTML = noContactsMessage
+            addPagination(false);
         }
     } catch (error) {
         console.error("sorry there was an error, please try again", error);
@@ -25,10 +40,12 @@ employees();
 
 
 
-//***********************************display data****************************************** */
+
+//*********************************** display data ****************************************** */
+
 function displayData(data) {
     content.innerHTML = "";
-    data.employee.forEach((item) => {
+    data.employee.data.forEach((item) => {
         content.innerHTML += `
     <div class="contacts-wrapper" id="${item.id}">
     <div class="details-wrapper">
@@ -63,7 +80,9 @@ const inputField = document.querySelectorAll(".input-field");
 
 
 
-//***********************************post data****************************************** */
+
+
+//*********************************** post data ****************************************** */
 
 async function postData() {
     // Associate the FormData object with the form element
@@ -78,12 +97,13 @@ async function postData() {
         const data = await response.json();
 
         if (data.status == 200) {
+            //pageNumber = totalPages
             employees();
             successModal.style.display = "block";
             successMessage.innerHTML = "New Contact Created";
             inputField.forEach((item) => (item.value = ""));
 
-            setTimeout(hideModal, 3000);
+            setTimeout(hideModal, 2000);
         } else {
             successModal.style.display = "block";
             successMessage.innerHTML = "Sorry, please try again";
@@ -109,8 +129,7 @@ form.addEventListener("submit", (event) => {
 
 
 
-//***********************************Delete a contact****************************************** */
-
+//******************************************* Delete a contact ****************************************** */
 
 async function deleteContact(id) {
     try {
@@ -124,6 +143,7 @@ async function deleteContact(id) {
         console.log(data.status);
 
         if (data.status == 200) {
+            
             employees();
             successModal.style.display = "block";
             successMessage.innerHTML = "Contact was deleted!";
@@ -155,7 +175,9 @@ document.addEventListener("click", function (e) {
 });
 
 
-//***********************************Edit a contact****************************************** */
+
+
+//******************************************* Edit a contact *********************************************/
 
 const btnEdit = document.getElementById("btn-edit");
 
@@ -198,8 +220,6 @@ async function updateContact(id) {
             `http://127.0.0.1:8000/api/employee/${id}/edit`,
             {
                 method: "PUT",
-
-               
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({
                     name: `${formName.value}`,
@@ -249,7 +269,6 @@ formEdit.addEventListener("submit", (event) => {
     }
 });
 
-
 //*************** Hide modal********************* */
 
 closeBtn.addEventListener("click", (event) => {
@@ -260,12 +279,7 @@ closeBtn.addEventListener("click", (event) => {
 
 
 
-
-
-//****************************** validate edit form ***************************** */
-
-
-
+//****************************************** validate edit form ***********************************************/
 
 function validateEditForm() {
     // Regular expression
@@ -297,3 +311,88 @@ function validateEditForm() {
 
     return nameValidate + genderValidate;
 }
+
+
+
+
+//**************************************** Pagination ********************************************** */
+
+const paginationWrapper = document.querySelector(".pagination-wrapper");
+const pageCountDisplay = document.querySelector(".page-count-display");
+const btnNext = document.querySelector("#btnNext");
+const btnPrev = document.querySelector("#btnPrev");
+const pageNumbers = document.querySelector(".page-numbers");
+const pageLink = document.getElementsByTagName("span");
+
+
+btnNext.addEventListener("click", (event) => {
+    if (pageNumber !== totalPages) {
+        pageNumber = pageNumber + 1;
+        employees();
+    }
+});
+
+btnPrev.addEventListener("click", (event) => {
+    if (pageNumber !== 1) {
+        pageNumber = pageNumber - 1;
+        employees();
+    }
+});
+
+let counter = 1;
+
+function addPagination(recordsToShow) {
+
+    if (counter <= totalPages) {
+        pageNumbers.innerHTML += `
+    <span class="pageLinks">${counter}</span>
+    
+    `;
+
+        counter = counter + 1;
+        addPagination();
+    } else {
+        Array.from(pageLink).forEach((item) => {
+            if (item.textContent == pageNumber) {
+                item.style.color = "red";
+            } else {
+                item.style.color = "black";
+            }
+
+            if (item.textContent > totalPages) {
+                item.remove();
+                counter = counter - 1;
+            }
+        });
+    }
+
+    if(recordsToShow){
+    paginationWrapper.style.display = 'flex'
+    pageCountDisplay.style.display = 'block'
+    
+    }else{
+    paginationWrapper.style.display = 'none'
+    pageCountDisplay.style.display = 'none'
+    }
+}
+
+
+document.addEventListener("click", (e) => {
+    if (e.target.className == "pageLinks") {
+        pageNumber = e.target.textContent;
+        employees();
+    }
+});
+
+
+//**************************Page inserts/info on number of records and current page number *****************************/
+
+
+
+
+function displayPageCount(){
+
+pageCountDisplay.innerHTML = `<span> Page ${pageNumber} of ${totalPages}</span>`
+
+}
+

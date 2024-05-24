@@ -19,12 +19,20 @@
 <h1>Contacts</h1>
 
 <main>  
+
+<div id="content"></div>
+
+<div class="page-count-display"></div>
+
+<div class="pagination-wrapper">
+
+<button id="btnPrev">Prev</button>
+
+    <div class="page-numbers"></div>
     
-<div id="content">
+    <button id="btnNext">Next</button>
 
-
-</div>
-
+    </div>
 
 <form id="contact-form">
     <h2>Create a new contact </h2>
@@ -52,8 +60,8 @@
 <input class="input-field" type="text" name="phone"  maxlength="10" pattern="\d{10}" placeholder="Enter 10 digit number" required>
 
 </div>
-<input id="btn-create" type="submit" value="Submit" />
 
+<input id="btn-create" type="submit" value="Submit" />
 </form>
 
 

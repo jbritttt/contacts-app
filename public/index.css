@@ -17,7 +17,7 @@ main {
 }
 
 #content {
-    margin: 3rem;
+    
     width: 50%;
 }
 
@@ -27,11 +27,19 @@ main {
     line-height: 25px;
 }
 .contacts-wrapper {
-    margin: 4rem;
+    margin-top: 4rem;
     padding: 2rem;
     font-size: 16px;
     border-bottom: 1px solid rgb(126, 126, 126);
 }
+
+
+.page-count-display{
+    margin-top:2rem;
+    margin-bottom:2rem;
+    display:none
+}
+
 
 .edit-modal-wrapper {
     position: fixed;
@@ -105,7 +113,9 @@ main {
 #btn-edit,
 #btn-create,
 #btn-update,
-#close-btn {
+#close-btn,
+#btnPrev,
+#btnNext {
     border: none;
     padding: 0.5rem;
     color: white;
@@ -115,6 +125,17 @@ main {
     margin-top: 0.5rem;
     cursor: pointer;
 }
+
+#btnPrev,
+#btnNext {
+
+    background-color:rgb(49, 49, 49);
+    padding:.4rem;
+    border-radius:3px
+}
+
+
+
 
 .details-wrapper {
     display: flex;
@@ -128,6 +149,7 @@ main {
 
 #contact-form {
     margin-bottom: 6rem;
+    margin-top:4rem;
 
     width: 50%;
 }
@@ -158,6 +180,42 @@ main {
 .input-field {
     padding: 0.5rem;
 }
+
+
+.pagination-wrapper{
+
+    display:flex;
+    justify-content:center;
+    align-items: center;
+    margin-top:2rem;
+    display:none
+   
+}
+
+
+
+.pagination-wrapper .page-numbers{
+
+   margin:1rem
+   
+}
+
+.pagination-wrapper .page-numbers
+{
+
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    
+ }
+
+ .pagination-wrapper .page-numbers .pageLinks{
+    
+    margin:.3rem;
+    cursor:pointer
+    
+}
+
 
 @media only screen and (max-width: 920px) {
     #content {
