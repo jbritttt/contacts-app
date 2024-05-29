@@ -13,201 +13,225 @@ use Illuminate\Support\Facades\Validator;
 
 
 class EmployeeController extends Controller
-
 {
-    public function index(){
+    public function index()
+    {
 
-$employee = Employee::paginate(10);
+        $employee = Employee::paginate(3);
 
-if($employee->count() > 0){
+        if ($employee->count() > 0) {
 
-return response()-> json([
-    'status' => 200,
-    'employee' => $employee
-], 200);
+            return response()->json([
+                'status' => 200,
+                'employee' => $employee
+            ], 200);
 
 
-}else{
-    return response()-> json([
-        'status' => 404,
-        'message' => 'No records found'
-    ], 404);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No records found'
+            ], 404);
 
-}
+        }
 
     }
 
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
 
             'name' => 'required|string|max:191',
             'gender' => 'required|string|max:191',
+            'image' => 'nullable|mimes:png,jpg.jpeg,webp',
             'email' => 'required|email|max:191',
             'phone' => 'required|digits:10',
 
 
         ]);
-      
-        if($validator->fails()){
-
-return response()->json([
-'status' => 422,
-'errors' => $validator->messages()
 
 
-],422);
-        }else{
+
+        if ($validator->fails()) {
+
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->messages()
+
+
+            ], 422);
+        } else {
+
+            if ($request->has('image')) {
+
+                $file = $request->file('image');
+                $extension = $file->getClientOriginalExtension();
+
+                $filename = time() . '.' . $extension;
+                $path = 'uploads/employee/';
+                $file->move($path, $filename);
+            }
 
             $employee = Employee::create([
 
                 'name' => $request->name,
                 'gender' => $request->gender,
+                'image' => $path . $filename,
                 'email' => $request->email,
                 'phone' => $request->phone,
 
             ]);
 
-            if($employee){
+            if ($employee) {
                 return response()->json([
                     'status' => 200,
                     'message' => "Employee created successfully",
-                ],200);
+                ], 200);
 
-            }else{
+            } else {
                 return response()->json([
                     'status' => 500,
                     'message' => "Something went wrong",
-                ],500);
+                ], 500);
 
             }
         }
+
+    }
+
+    public function show($id)
+    {
+
+        $employee = Employee::find($id);
+        if ($employee) {
+
+            return response()->json([
+                'status' => 200,
+                'employee' => $employee
+            ], 200);
+
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => "No such Employee found"
+            ], 404);
+
+
+        }
+
+
+    }
+
+
+
+    public function edit($id)
+    {
+
+        $employee = Employee::find($id);
+        if ($employee) {
+
+            return response()->json([
+                'status' => 200,
+                'Employee' => $employee
+            ], 200);
+
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => "No such Employee found"
+            ], 404);
+
+
+        }
+
+
+
+    }
+
+    public function update(Request $request, int $id)
+    {
         
-            }
+        $validator = Validator::make($request->all(), [
 
-            public function show($id){
-
-                $employee = Employee::find($id);
-if($employee){
-
-    return response()->json([
-        'status' => 200,
-        'employee' => $employee
-    ],200);
-
-}else{
-    return response()->json([
-        'status' => 404,
-        'message' => "No such Employee found"
-    ],404);
-
-
-}
-
-
-            }
-
-
-
-            public function edit($id){
-
-                $employee = Employee::find($id);
-                if($employee){
-                
-                    return response()->json([
-                        'status' => 200,
-                        'Employee' => $employee
-                    ],200);
-                
-                }else{
-                    return response()->json([
-                        'status' => 404,
-                        'message' => "No such Employee found"
-                    ],404);
-                
-                
-                }
-
-
-
-            }
-
-            public function update(Request $request, int $id){
-
-                $validator = Validator::make($request->all(), [
-
-                    'name' => 'required|string|max:191',
-                    'gender' => 'required|string|max:191',
-                    'email' => 'required|email|max:191',
-                    'phone' => 'required|digits:10',
-        
-        
-                ]);
-              
-                if($validator->fails()){
-        
-        return response()->json([
-        'status' => 422,
-        'errors' => $validator->messages()
-        
-        
-        ],422);
-                }else{
-        
-
-                    $employee = Employee::find($id);
-                   
-        
-                    if($employee){
-
-                        $employee->update([
-        
-                            'name' => $request->name,
-                            'gender' => $request->gender,
-                            'email' => $request->email,
-                            'phone' => $request->phone,
+            'name' => 'required|string|max:191',
+            'gender' => 'required|string|max:191',
             
-                        ]);
+            'email' => 'required|email|max:191',
+            'phone' => 'required|digits:10',
 
-                        return response()->json([
-                            'status' => 200,
-                            'message' => "Employee updated successfully",
-                        ],200);
-        
-                    }else{
-                        return response()->json([
-                            'status' => 404,
-                            'message' => "No such Employee found!",
-                        ],404);
-        
-                    }
-                }
+
+        ]);
+
+        if ($validator->fails()) {
+
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->messages()
+
+
+            ], 422);
+        } else {
+
+
+            $employee = Employee::find($id);
+
+           
+
+
+            if ($employee) {
+
+
+                $employee->update([
+
+                    'name' => $request->name,
+                    'gender' => $request->gender,
+                   
+                    'email' => $request->email,
+                    'phone' => $request->phone,
+
+                ]);
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => "Employee updated successfully",
+                ], 200);
+
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'message' => "No such Employee found!",
+                ], 404);
 
             }
+        }
 
-            public function destroy($id){
+    }
 
-                $employee = Employee::find($id);
+    public function destroy($id)
+    {
 
-if($employee){
+        $employee = Employee::find($id);
 
-    $employee->delete();
-    return response()->json([
-        'status' => 200,
-        'message' => "Employee deleted successfully!",
-    ],200);
+        if ($employee) {
 
-}else{
-    return response()->json([
-        'status' => 404,
-        'message' => "No such Employee found!",
-    ],404);
+            $employee->delete();
+            return response()->json([
+                'status' => 200,
+                'message' => "Employee deleted successfully!",
+            ], 200);
 
-}
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => "No such Employee found!",
+            ], 404);
+
+        }
 
 
-            }
+    }
 
 }
 

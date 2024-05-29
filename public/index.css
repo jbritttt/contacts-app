@@ -165,7 +165,7 @@ main {
 #contact-form-edit div {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     margin: 1.5rem;
 }
 
@@ -180,6 +180,15 @@ main {
 .input-field {
     padding: 0.5rem;
 }
+
+
+.contact-info img, #edit-image{
+
+    width:150px;
+   
+}
+
+
 
 
 .pagination-wrapper{

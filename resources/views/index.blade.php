@@ -34,9 +34,13 @@
 
     </div>
 
-<form id="contact-form">
+<form id="contact-form" enctype="multipart/form-data">
     <h2>Create a new contact </h2>
-    
+    <div> 
+    <label for="">Upload Image</label>
+<input class="input-field" type="file" name="image" required>
+
+</div>
 <div> 
     <label for="">Name</label>
 <input class="input-field" type="name" name="name" placeholder="Enter name" required>
@@ -48,6 +52,8 @@
 <input class="input-field" type="text" name="gender" placeholder="Enter gender" required>
 
 </div>
+
+
 
 <div> 
     <label for="">Email</label>
@@ -71,33 +77,37 @@
 
 <div class="edit-modal">
 <div class="close"><strong>X</strong></div>
-<form id="contact-form-edit">
+<form id="contact-form-edit" enctype="multipart/form-data">
    
 <div> 
+    
+<input class="input-field" id="img-file-path" type="file" name="image" required>
 
+</div>
 
-
-
+<div> 
     <label for="">Name</label>
-<input class="input-field" id="name" type="text" name="name" placeholder="name" required>
+<input class="input-field" id="name" type="name" name="name" placeholder="Enter name" required>
 
 </div>
 
 <div> 
     <label for="">Gender</label>
-<input class="input-field" id="gender" type="text" name="gender" placeholder="gender" required>
+<input class="input-field" id="gender" type="text" name="gender" placeholder="Enter gender" required>
 
 </div>
 
+
+
 <div> 
     <label for="">Email</label>
-<input class="input-field" id="email" type="email" name="email" placeholder="email" required>
+<input class="input-field" id="email" type="email" name="email" placeholder="Enter email" required>
 
 </div>
 
 <div> 
     <label for="">Phone</label>
-<input class="input-field" id="phone" type="text" name="phone" placeholder="phone" maxlength="10" pattern="\d{10}" placeholder="Enter 10 digit number" required>
+<input class="input-field" id="phone" type="text" name="phone"  maxlength="10" pattern="\d{10}" placeholder="Enter 10 digit number" required>
 
 </div>
 <input id="btn-update" type="submit" value="Update" />

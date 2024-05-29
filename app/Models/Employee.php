@@ -14,6 +14,7 @@ class Employee extends Model
 
         'name',
         'gender',
+        'image',
         'email',
         'phone'
 
